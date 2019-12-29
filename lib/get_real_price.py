@@ -4,7 +4,6 @@ import json
 import logging
 
 URL = "http://rt.molit.go.kr/new/gis/getDanjiInfoDetail.do"
-
 HEADER = {
     'Referer': 'http://rt.molit.go.kr/new/gis/srh.do?menuGubun=A&gubunCode=LAND'
 }
