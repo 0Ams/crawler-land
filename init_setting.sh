@@ -1,9 +1,9 @@
 #bin/bash
-pip install virtualenv
+pip3 install virtualenv
 virtualenv hamu
 if [ ! -d "momo" ] ; then
   exit;
 fi
 cd hamu
 source hamu/bin/activate
-pip install -r requirement.txt
+pip3 install -r requirement.txt

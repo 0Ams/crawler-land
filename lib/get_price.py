@@ -1,7 +1,4 @@
 #-*- coding: utf-8 -*-
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
 
 from bs4 import BeautifulSoup
 from datetime import datetime
@@ -9,13 +6,24 @@ import requests
 import pandas as pd
 import numpy as np
 import re
-
+import logging
+logger = logging.getLogger("logger")
 
 def get_naver_realasset(area_code, apt_name, min_date, page=1):
+  df = pd.DataFrame()
+  for i in range(1, 50): # 최대 100 페이지
+      df_tmp = get_origin_naver_realasset(area_code, apt_name, min_date, i)
+      if len(df_tmp) <= 0:
+          break
+      df = df.append(df_tmp, ignore_index=True)
+  print(df)
+  # logger.info(df)
+
+def get_origin_naver_realasset(area_code, apt_name, min_date, page=1):
   url = 'http://land.naver.com/article/articleList.nhn?' \
       + 'rletTypeCd=A01&tradeTypeCd=A1&hscpTypeCd=A01%3AA03%3AA04' \
-      + '&minPrc=30000' \
-      + '&maxPrc=60000' \
+      + '&minPrc=40000' \
+      + '&maxPrc=70000' \
       + '&cortarNo=' + area_code \
       + '&page=' + str(page)
 
@@ -52,8 +60,8 @@ def get_naver_realasset(area_code, apt_name, min_date, page=1):
     _name = cols[4]
     _areaSize = cols[5]
 
-    _publicSize = re.findall(unicode('공급면적(.*?)㎡'), _areaSize)[0].replace(',', '')
-    _privateSize = re.findall(unicode('전용면적(.*?)㎡'), _areaSize)[0].replace(',', '')
+    _publicSize = re.findall('공급면적(.*?)㎡', _areaSize)[0].replace(',', '')
+    _privateSize = re.findall('전용면적(.*?)㎡', _areaSize)[0].replace(',', '')
     _publicSize = float(_publicSize)
     _privateSize = float(_privateSize)
     # _publicSize = re.findall(r'\d*\/', _areaSize)[0].replace('/', '')
