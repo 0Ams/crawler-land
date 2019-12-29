@@ -18,13 +18,11 @@ def initialization():
 
 def run():
   logger = initialization()
-  logger.info(f"1. 네이버 호가 검색 => naver \n2. 실거래가 => real \n입력해주세요:")
-  arg = input()
+  arg = input(f"1. 네이버 호가 검색 => naver \n2. 실거래가 => real \n입력해주세요:")
   if arg == 'naver':
     get_naver_realasset(area_code, apt_name, min_date)
   elif arg == 'real':
-    logger.info(f"# 6334: '장미마을', 6315: '매화 2단지', 6339: '벽산', 6360: '청라한솔', 50369: '정자 정든마을'")
-    target = int(input())
+    target = int(input(f"6334: '장미마을' \n6315: '매화 2단지' \n6339: '벽산' \n6360: '청라한솔' \n50369: '정자 정든마을' \n: "))
     get_detail_real_price(target, 2019)
   else:
     logger("input 값이 이상함")
