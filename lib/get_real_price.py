@@ -34,16 +34,16 @@ def get_detail_real_price(code, year):
       exit
 
   data = json.loads(resp.text)
-  logger.info('\n======================== 실거래가 =============================\n')
-
+  result = "<details>"+f"<summary>[{AREA_CODE_TABLE[code]} 실거래가] </summary>"+"<div markdown='1'>\n"+"\n|계약 날짜|층|크기|가격|\n"+"|--|--|--|--|\n"
   for item in data['result']:
       if item['BLDG_AREA'] < 55 or item['BLDG_AREA'] > 90:
           continue
-      logger.info(
-          f"[{AREA_CODE_TABLE[code]}][{item['DEAL_MM']}월] {item['APTFNO']}층 크기: {item['BLDG_AREA']}㎡ 가격 {item['SUM_AMT']}만원")
+    #   result += f"[{AREA_CODE_TABLE[code]}][{item['DEAL_MM']}월] {item['APTFNO']}층 크기: {item['BLDG_AREA']}㎡ 가격 {item['SUM_AMT']}만원\n"
+      result += f"|{item['DEAL_MM']}월|{item['APTFNO']}층|{item['BLDG_AREA']}㎡|{item['SUM_AMT']}만원|\n"
 
-  logger.info(
-      '\n=============================================================\n')
+  result+="\n</div>"+"</details>"
+  logger.info(result)
+  return result
 
 
 # Size에 따라 가격이 변하므로 큰 의미는 없는 데이터가됨.
@@ -72,12 +72,8 @@ def get_avg_real_price(code, year):
           realPrice[item['APTFNO']]['total']) + int(item['SUM_AMT'].replace(",", ""))
       realPrice[item['APTFNO']]['count'] = realPrice[item['APTFNO']]['count'] + 1
 
-
-  logger.info(
-      '\n======================== 평균 실거래가 =============================\n')
-
+  result = '\n======================== 평균 실거래가 =============================\n'
   for floor in realPrice.keys():
-      logger.info(f"[{floor}층] 평균가격: {realPrice[floor]['total']/realPrice[floor]['count']}")
+      result += f"[{floor}층] 평균가격: {realPrice[floor]['total']/realPrice[floor]['count']}\n"
 
-  logger.info(
-      '\n=================================================================\n')
+  return result
