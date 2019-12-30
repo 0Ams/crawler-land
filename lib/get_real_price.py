@@ -17,9 +17,6 @@ AREA_CODE_TABLE = {
 }
 logger = logging.getLogger("logger")
 
-# 6334 장미마을, 6315 매화마을 2단지, 6339 벽산, 6360 청라한솔
-
-
 def get_detail_real_price(code, year):
   param = {
       'menuGubun': 'A',
@@ -34,12 +31,14 @@ def get_detail_real_price(code, year):
       exit
 
   data = json.loads(resp.text)
-  result = "<details>"+f"<summary>[{AREA_CODE_TABLE[code]} 실거래가] </summary>"+"<div markdown='1'>\n"+"\n|계약 날짜|층|크기|가격|\n"+"|--|--|--|--|\n"
+  result = "<details>"+f"<summary>[{AREA_CODE_TABLE[code]} 실거래가] </summary>"+"<div markdown='1'>\n"+"\n|No|계약 날짜|층|크기|가격|\n"+"|--|--|--|--|--|\n"
+  cnt = 0
   for item in data['result']:
       if item['BLDG_AREA'] < 55 or item['BLDG_AREA'] > 90:
           continue
+      cnt += 1
     #   result += f"[{AREA_CODE_TABLE[code]}][{item['DEAL_MM']}월] {item['APTFNO']}층 크기: {item['BLDG_AREA']}㎡ 가격 {item['SUM_AMT']}만원\n"
-      result += f"|{item['DEAL_MM']}월|{item['APTFNO']}층|{item['BLDG_AREA']}㎡|{item['SUM_AMT']}만원|\n"
+      result += f"|{cnt}|{item['DEAL_MM']}월|{item['APTFNO']}층|{item['BLDG_AREA']}㎡|{item['SUM_AMT']}만원|\n"
 
   result+="\n</div>"+"</details>"
   logger.info(result)

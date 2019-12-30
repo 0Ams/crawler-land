@@ -34,7 +34,7 @@ def run():
     print(result, file=f)
     f.close()
   elif arg == 'real-all':
-    f = open("real-price-all.md", "a")
+    f = open("real-price-all.md", "w")
     result = "# 실거래가 모음\n"
     for key in AREA_CODE_TABLE.keys():
       result += get_detail_real_price(key, 2019)
