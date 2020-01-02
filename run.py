@@ -4,6 +4,9 @@ from lib.util.get_code import *
 from lib.get_price import *
 from lib.get_real_price import *
 from lib.util.logger import *
+import time
+now = time.localtime()
+YEAR = now.tm_year
 
 # initialized logger
 
@@ -28,16 +31,16 @@ def run():
   if arg == 'naver':
     get_naver_realasset(area_code, apt_name, min_date)
   elif arg == 'real':
-    f = open("realprice.md", "a")
+    f = open(f"{YEAR}-realprice.md", "a")
     target = int(input(f"6334: '장미마을' \n6315: '매화 2단지' \n6339: '벽산' \n6360: '청라한솔' \n50369: '정자 정든마을' \n: "))
-    result = get_detail_real_price(target, 2019)
+    result = get_detail_real_price(target, YEAR)
     print(result, file=f)
     f.close()
   elif arg == 'real-all':
-    f = open("real-price-all.md", "w")
+    f = open(f"{YEAR}-real-price-all.md", "w")
     result = "# 실거래가 모음\n"
     for key in AREA_CODE_TABLE.keys():
-      result += get_detail_real_price(key, 2019)
+      result += get_detail_real_price(key, YEAR)
     print(result, file=f)
     f.close()
   else:
