@@ -5,6 +5,7 @@ from lib.get_price import *
 from lib.get_real_price import *
 from lib.util.logger import *
 import time
+import argparse
 now = time.localtime()
 YEAR = now.tm_year
 
@@ -20,13 +21,13 @@ AREA_CODE_TABLE = {
     6360: '청라한솔',
     50369: '정자 정든마을'
 }
+FLAGS = None
 
 def initialization():
   init_logger()
   return logging.getLogger("logger")
 
 def run():
-  logger = initialization()
   arg = input(f"1. 네이버 호가 검색 => naver \n2. 실거래가 => real \n3. 실거래가 모두 => real-all\n입력해주세요: ")
   if arg == 'naver':
     get_naver_realasset(area_code, apt_name, min_date)
@@ -46,7 +47,23 @@ def run():
   else:
     logger("input 값이 이상함")
 
-run()
+def main():
+  logger = initialization()
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--dev', type=str, default='false', help='if this is true, only using real-all')
+  FLAGS = parser.parse_args()
+
+  if FLAGS.dev == 'true':
+    f = open(f"{YEAR}-real-price-all.md", "w")
+    result = "# 실거래가 모음\n"
+    for key in AREA_CODE_TABLE.keys():
+      result += get_detail_real_price(key, YEAR)
+    print(result, file=f)
+    f.close()
+  else:
+    run()
+
+main()
 # df = pd.DataFrame()
 # for i in range(1, 50): # 최대 100 페이지
 #     df_tmp = get_naver_realasset(area_code, apt_name, min_date,i)
