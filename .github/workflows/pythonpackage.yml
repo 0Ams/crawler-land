@@ -28,6 +28,42 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    # 실거래가 갱신
+    - name: generate real price
       run: |
         python run.py --dev true
+
+    # 정적 생성기 저장소를 fetch한다.
+    - name: clone gatsby-blog
+      uses: actions/checkout@master
+      with:
+        path: 'static-site-generator'
+
+    # git config로 이메일과 이름을 설정한다. 그 값들은 github context에서 가져온다.
+    - name: git config
+      env:
+        USER_NAME: ${{ github.event.pusher.name }}
+        USER_EMAIL: ${{ github.event.pusher.email }}
+      run: |
+        git config --global user.email "$USER_EMAIL"
+        git config --global user.name "$USER_NAME"
+
+    # ssh private 키를 job 가상환경에 설치한다.
+    # 정적 사이트 저장소 git을 clone하고 push하기 위해 필요하다
+    # 참고: https://cupfullofcode.com/blog/2018/12/21/deploying-hugo-with-github-actions/
+    - name: install deploy keys
+      env:
+        GH_ACTION_DEPLOY_KEY: ${{ secrets.GH_ACTION_DEPLOY_KEY }}
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$GH_ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    # 정적 사이트 저장소를 커밋하고 푸쉬한다.
+    # 커밋 내용은 정적 사이트 생성기의 제일 최근 커밋 메시지
+    - name: push changed files
+      run: |
+        git add .
+        git commit -m "updated auto real-price"
+        git push origin master
