@@ -39,7 +39,7 @@ def run():
     f.close()
   elif arg == 'real-all':
     f = open(f"{YEAR}-real-price-all.md", "w")
-    result = "# 실거래가 모음\n"
+    result = "# 실거래가 모음\n" + "Updated Date: " + str(now.tm_mon) + "월" + str(now.tm_mday) + "일\n"
     for key in AREA_CODE_TABLE.keys():
       result += get_detail_real_price(key, YEAR)
     print(result, file=f)
@@ -55,7 +55,7 @@ def main():
 
   if FLAGS.dev == 'true':
     f = open(f"{YEAR}-real-price-all.md", "w")
-    result = "# 실거래가 모음\n"
+    result = "# 실거래가 모음\n" + "Updated Date: " + str(now.tm_mon) + "월" + str(now.tm_mday) + "일\n"
     for key in AREA_CODE_TABLE.keys():
       result += get_detail_real_price(key, YEAR)
     print(result, file=f)

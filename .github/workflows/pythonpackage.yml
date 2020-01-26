@@ -25,7 +25,6 @@ jobs:
       run: |
         git config --global user.email "$USER_EMAIL"
         git config --global user.name "$USER_NAME"
-
     # ssh private 키를 job 가상환경에 설치한다.
     # 정적 사이트 저장소 git을 clone하고 push하기 위해 필요하다
     # 참고: https://cupfullofcode.com/blog/2018/12/21/deploying-hugo-with-github-actions/
@@ -52,10 +51,11 @@ jobs:
     - name: generate real price
       run: |
         python run.py --dev true
-    # 정적 사이트 저장소를 커밋하고 푸쉬한다.
-    # 커밋 내용은 정적 사이트 생성기의 제일 최근 커밋 메시지
-    - name: push changed files
-      run: |
-        git add *.md
-        git commit -m "updated auto real-price"
-        git push origin master
+    # TODO: 커밋 내용은 정적 사이트 생성기의 제일 최근 커밋 메시지
+    # - name: push changed files
+    #   run: |
+    #     git remote rm origin && \
+    #     git remote add origin git@github.com:0Ams/crawler-land.git && git fetch
+    #     git add *.md
+    #     git commit -m "updated auto real-price" | echo "checkout commit"
+    #     git push -u origin master
