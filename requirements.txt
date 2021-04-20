@@ -15,7 +15,7 @@ pandas==0.25.3
 pathtools==0.1.2     
 pip==19.3.1    
 pluggy==0.13.1    
-py==1.8.1
+py==1.10.0
 pycodestyle==2.5.0     
 pyparsing==2.4.6     
 pytest==5.3.4     
